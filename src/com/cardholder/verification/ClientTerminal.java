@@ -165,7 +165,6 @@ public class ClientTerminal extends Terminal {
         } else {
             System.out.println("debited: [" + amount + "] => " + "error");
         }
-
     }
 
     public static void main(String[] args) throws Exception {
