@@ -3,17 +3,12 @@ import static com.cardholder.verification.Constants.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 
-import java.security.GeneralSecurityException;
-import java.security.KeyFactory;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
 import javax.crypto.Cipher;
 
 public class Simulator extends Terminal {
-	private final String PUBLIC_KEY_FILENAME = "";
+	private final String PUBLIC_KEY_FILENAME = "E:\\Projects\\cardholder-verification\\src\\com\\cardholder\\verification\\public-key.txt";
 	
 	private RSAPublicKey publicKey;
 	private Cipher cipher;
@@ -27,7 +22,6 @@ public class Simulator extends Terminal {
 
         cipher = Cipher.getInstance("RSA/None/PKCS1Padding");
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-
 	}
 
     private void processEntry(short entryStationId) throws Exception {

@@ -20,6 +20,8 @@ public abstract class Terminal {
     protected static String hostName = Constants.DEFAULT_HOST_NAME;
 
     protected static int port = Constants.DEFAULT_PORT;
+    
+	protected final String PUBLIC_KEY_FILENAME = "";
 
     protected CadClientInterface cad;
     

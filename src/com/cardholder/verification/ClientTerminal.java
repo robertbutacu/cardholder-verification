@@ -3,13 +3,29 @@ package com.cardholder.verification;
 import static com.cardholder.verification.Constants.*;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.InputStreamReader;
+import java.security.interfaces.RSAPublicKey;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 
 public class ClientTerminal extends Terminal {
 	private boolean isValidated = false;
 	
+	private RSAPublicKey publicKey;
+	private Cipher cipher;
+	
 	public ClientTerminal() throws Exception {
 		super(Constants.DEFAULT_HOST_NAME, Constants.DEFAULT_PORT);
+		
+        BufferedReader br = new BufferedReader(new FileReader(PUBLIC_KEY_FILENAME));
+        String encodedPublicKey = br.readLine();
+        publicKey = (RSAPublicKey) loadPublicKey(encodedPublicKey);
+
+        cipher = Cipher.getInstance("RSA/None/PKCS1Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 	}
 
 	public void start() {
@@ -109,9 +125,17 @@ public class ClientTerminal extends Terminal {
         }
     }
 
-    private String encryptPin(String pin) {
-		// TODO Auto-generated method stub
-		return pin;
+    private String encryptPin(String PIN) throws IllegalBlockSizeException, BadPaddingException {
+        byte[] PINBytes = new byte[PIN.length()];
+        for (int i = 0; i < PIN.length(); ++i) {
+            PINBytes[i] = (byte) (PIN.charAt(i) - '0');
+        }
+
+        byte[] encrypted = cipher.doFinal(PINBytes);
+
+        String outputCommand = Integer.toHexString(encrypted.length & 0xff);
+
+        return outputCommand;
 	}
 
 	private void debit(String pin, short amount) throws Exception {
