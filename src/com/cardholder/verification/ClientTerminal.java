@@ -5,6 +5,7 @@ import static com.cardholder.verification.Constants.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStreamReader;
+import java.security.InvalidKeyException;
 import java.security.interfaces.RSAPublicKey;
 
 import javax.crypto.BadPaddingException;
@@ -25,7 +26,6 @@ public class ClientTerminal extends Terminal {
         publicKey = (RSAPublicKey) loadPublicKey(encodedPublicKey);
 
         cipher = Cipher.getInstance("RSA/None/PKCS1Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 	}
 
 	public void start() {
@@ -125,7 +125,8 @@ public class ClientTerminal extends Terminal {
         }
     }
 
-    private String encryptPin(String PIN) throws IllegalBlockSizeException, BadPaddingException {
+    private String encryptPin(String PIN) throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
+    	cipher.init(Cipher.ENCRYPT_MODE, publicKey);
         byte[] PINBytes = new byte[PIN.length()];
         for (int i = 0; i < PIN.length(); ++i) {
             PINBytes[i] = (byte) (PIN.charAt(i) - '0');
