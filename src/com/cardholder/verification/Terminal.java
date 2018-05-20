@@ -3,7 +3,12 @@ package com.cardholder.verification;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.net.Socket;
+import java.security.GeneralSecurityException;
+import java.security.KeyFactory;
+import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 
 import com.sun.javacard.apduio.Apdu;
 import com.sun.javacard.apduio.CadClientInterface;
@@ -200,5 +205,12 @@ public abstract class Terminal {
     protected void copyShort(short i, byte[] buffer, int offset) {
         buffer[offset] = (byte) ((i >> 8) & 0x00ff);
         buffer[offset + 1] = (byte) (i & 0x00ff);
+    }
+    
+    protected PublicKey loadPublicKey(String stored) throws GeneralSecurityException {
+        byte[] data = Base64.getDecoder().decode(stored);
+        X509EncodedKeySpec spec = new X509EncodedKeySpec(data);
+        KeyFactory fact = KeyFactory.getInstance("RSA");
+        return fact.generatePublic(spec);
     }
 }

@@ -1,9 +1,33 @@
 package com.cardholder.verification;
 import static com.cardholder.verification.Constants.*;
-public class Simulator extends Terminal {
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.security.PublicKey;
+import java.security.interfaces.RSAPublicKey;
+
+import java.security.GeneralSecurityException;
+import java.security.KeyFactory;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
+import javax.crypto.Cipher;
+
+public class Simulator extends Terminal {
+	private final String PUBLIC_KEY_FILENAME = "";
+	
+	private RSAPublicKey publicKey;
+	private Cipher cipher;
+	
 	public Simulator() throws Exception{
 		super(DEFAULT_HOST_NAME, DEFAULT_PORT);
+		
+        BufferedReader br = new BufferedReader(new FileReader(PUBLIC_KEY_FILENAME));
+        String encodedPublicKey = br.readLine();
+        publicKey = (RSAPublicKey) loadPublicKey(encodedPublicKey);
+
+        cipher = Cipher.getInstance("RSA/None/PKCS1Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+
 	}
 
     private void processEntry(short entryStationId) throws Exception {
