@@ -21,6 +21,7 @@ public class ClientTerminal extends Terminal {
 	public ClientTerminal() throws Exception {
 		super(Constants.DEFAULT_HOST_NAME, Constants.DEFAULT_PORT);
 		
+		
         BufferedReader br = new BufferedReader(new FileReader(PUBLIC_KEY_FILENAME));
         String encodedPublicKey = br.readLine();
         publicKey = (RSAPublicKey) loadPublicKey(encodedPublicKey);
