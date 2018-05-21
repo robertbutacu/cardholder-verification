@@ -30,7 +30,7 @@ public abstract class Terminal {
 
     protected static int port = Constants.DEFAULT_PORT;
     
-	protected final String PUBLIC_KEY_FILENAME = "";
+	protected final String PUBLIC_KEY_FILENAME = "E:\\Projects\\cardholder-verification\\src\\com\\cardholder\\verification\\public-key.txt";
 
     protected CadClientInterface cad;
     
