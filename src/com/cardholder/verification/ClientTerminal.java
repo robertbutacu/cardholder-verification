@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.security.InvalidKeyException;
 import java.security.interfaces.RSAPublicKey;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -18,6 +20,8 @@ public class ClientTerminal extends Terminal {
 	private RSAPublicKey publicKey;
 	private Cipher cipher;
 	
+	private List<Byte> CVRs;
+	
 	public ClientTerminal() throws Exception {
 		super(Constants.DEFAULT_HOST_NAME, Constants.DEFAULT_PORT);
 		
@@ -26,7 +30,8 @@ public class ClientTerminal extends Terminal {
         String encodedPublicKey = br.readLine();
         publicKey = (RSAPublicKey) loadPublicKey(encodedPublicKey);
 
-        cipher = Cipher.getInstance("RSA/None/PKCS1Padding");
+        cipher = Cipher.getInstance("RSA");
+        CVRs = new ArrayList();
 	}
 
 	public void start() {
