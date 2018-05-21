@@ -4,8 +4,9 @@ public class Account {
 	public short balance;
 	public byte[] pin;
 	
-	public Account(){
+	public Account(byte[] pin){
 		balance = (short) 0;
+		this.pin = pin;
 	}
 	
 	public void debit(short amount) {
