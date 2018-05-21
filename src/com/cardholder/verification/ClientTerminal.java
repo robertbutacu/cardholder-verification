@@ -20,10 +20,10 @@ public class ClientTerminal extends Terminal {
 	private RSAPublicKey publicKey;
 	private Cipher cipher;
 	
-	private List<Byte> CVRs;
+	private List<List<Byte>> CVRs;
 	
 	public ClientTerminal() throws Exception {
-		super(Constants.DEFAULT_HOST_NAME, Constants.DEFAULT_PORT);
+		super(Constants.DEFAULT_HOST_NAME, Constants.DEFAULT_PORT + 1);
 		
 		
         BufferedReader br = new BufferedReader(new FileReader(PUBLIC_KEY_FILENAME));
@@ -31,11 +31,12 @@ public class ClientTerminal extends Terminal {
         publicKey = (RSAPublicKey) loadPublicKey(encodedPublicKey);
 
         cipher = Cipher.getInstance("RSA");
-        CVRs = new ArrayList();
+        CVRs = new ArrayList<List<Byte>>();
 	}
 
 	public void start() {
-        while (true) {
+		boolean isPoweredUp = true;
+        while (isPoweredUp) {
             try {
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -54,7 +55,7 @@ public class ClientTerminal extends Terminal {
                     continue;
                 }
 
-                System.out.println("Insert method (balance/credit/debit): ");
+                System.out.println("Insert method (balance/credit/debit/power down): ");
                 String method = br.readLine().toLowerCase();
                 short amount = 0;
 
@@ -74,6 +75,11 @@ public class ClientTerminal extends Terminal {
                     	amount = Short.parseShort(br.readLine());
                         debit(PIN, amount);
                         break;
+                    case "powerdown":
+                    	System.out.println("Powering down");
+                    	powerDownRequest();
+                    	isPoweredUp = false;
+                    	break;
 
                     default:
                         System.out.println("Invalid command: " + method);
@@ -87,6 +93,11 @@ public class ClientTerminal extends Terminal {
 
         }
     }
+	
+	private void powerDownRequest() throws Exception {
+		sendRequest(PROCESS_EXIT, new byte[0]);
+	}
+	
     private void getBalance(String pin) throws Exception {
 
         // Request Message: []
